@@ -13,7 +13,7 @@ b San Francisco Veterans Affairs (VA) Medical Center
 
 ### Description of data and SAS and R codes for reproducing the results of this article:
 #### [File name: originaldata](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/originaldata.csv)
-File format: .csv
+File format: .csv <br>
 Description: HRS data with 39 predictors and 4 outcomes of 5,531 respondents
 
 #### [File name: R_LASSOselection](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/R_LASSOselection.R)
