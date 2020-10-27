@@ -148,128 +148,128 @@ Description: SAS code to perform BIC backward elimination for individual outcome
 Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/21.SAS_BICbackwardIndOutcomeSimSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/21.SAS_BICbackwardIndOutcomeSimSce3Uncorr.sas) <br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 3 simulated training uncorrelated data
 
-#### File name: 22.SAS_baBICbackwardSimSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/22.SAS_baBICbackwardSimSce3Corr.txt)
-Link to File: [.txt <br>
+#### File name: 22.SAS_baBICbackwardSimSce3Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/22.SAS_baBICbackwardSimSce3Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/22.SAS_baBICbackwardSimSce3Corr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 3 simulated training correlated data
 
-#### File name: 23.SAS_baBICbackwardSimSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/23.SAS_baBICbackwardSimSce3Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 23.SAS_baBICbackwardSimSce3Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/23.SAS_baBICbackwardSimSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/23.SAS_baBICbackwardSimSce3Uncorr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 3 simulated training uncorrelated data
 
-#### File name: 24.SAS_BICIndFullNumPredCstatTest_SimSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/24.SAS_BICIndFullNumPredCstatTest_SimSce1Corr.txt)
-Link to File: [.txt <br>
+#### File name: 24.SAS_BICIndFullNumPredCstatTest_SimSce1Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/24.SAS_BICIndFullNumPredCstatTest_SimSce1Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/24.SAS_BICIndFullNumPredCstatTest_SimSce1Corr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 1 simulated testing correlated data
 
-#### File name: 25.SAS_BICIndFullNumPredCstatTest_SimSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/25.SAS_BICIndFullNumPredCstatTest_SimSce1Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 25.SAS_BICIndFullNumPredCstatTest_SimSce1Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/25.SAS_BICIndFullNumPredCstatTest_SimSce1Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/25.SAS_BICIndFullNumPredCstatTest_SimSce1Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 1 simulated testing uncorrelated data
 
-#### File name: 26.SAS_baBICNumPredCstatTest_SimSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/26.SAS_baBICNumPredCstatTest_SimSce1Corr.txt)
-Link to File: [.txt <br>
+#### File name: 26.SAS_baBICNumPredCstatTest_SimSce1Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/26.SAS_baBICNumPredCstatTest_SimSce1Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/26.SAS_baBICNumPredCstatTest_SimSce1Corr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 1 simulated testing correlated data
 
-#### File name: 27.SAS_baBICNumPredCstatTest_SimSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/27.SAS_baBICNumPredCstatTest_SimSce1Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 27.SAS_baBICNumPredCstatTest_SimSce1Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/27.SAS_baBICNumPredCstatTest_SimSce1Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/27.SAS_baBICNumPredCstatTest_SimSce1Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 1 simulated testing uncorrelated data
 
-#### File name: 28.SAS_BICIndFullNumPredCstatTest_SimSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/28.SAS_BICIndFullNumPredCstatTest_SimSce2Corr.txt)
-Link to File: [.txt <br>
+#### File name: 28.SAS_BICIndFullNumPredCstatTest_SimSce2Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/28.SAS_BICIndFullNumPredCstatTest_SimSce2Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/28.SAS_BICIndFullNumPredCstatTest_SimSce2Corr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 2 simulated testing correlated data
 
-#### File name: 29.SAS_BICIndFullNumPredCstatTest_SimSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/29.SAS_BICIndFullNumPredCstatTest_SimSce2Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 29.SAS_BICIndFullNumPredCstatTest_SimSce2Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/29.SAS_BICIndFullNumPredCstatTest_SimSce2Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/29.SAS_BICIndFullNumPredCstatTest_SimSce2Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 2 simulated testing uncorrelated data
 
-#### File name: 30.SAS_baBICNumPredCstatTest_SimSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/30.SAS_baBICNumPredCstatTest_SimSce2Corr.txt)
-Link to File: [.txt <br>
+#### File name: 30.SAS_baBICNumPredCstatTest_SimSce2Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/30.SAS_baBICNumPredCstatTest_SimSce2Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/30.SAS_baBICNumPredCstatTest_SimSce2Corr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 2 simulated testing correlated data
 
-#### File name: 31.SAS_baBICNumPredCstatTest_SimSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/31.SAS_baBICNumPredCstatTest_SimSce2Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 31.SAS_baBICNumPredCstatTest_SimSce2Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/31.SAS_baBICNumPredCstatTest_SimSce2Uncorr.txt) | [.sas]( https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/31.SAS_baBICNumPredCstatTest_SimSce2Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 2 simulated testing uncorrelated data
 
-#### File name: 32.SAS_BICIndFullNumPredCstatTest_SimSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/32.SAS_BICIndFullNumPredCstatTest_SimSce3Corr.txt)
-Link to File: [.txt
+#### File name: 32.SAS_BICIndFullNumPredCstatTest_SimSce3Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/32.SAS_BICIndFullNumPredCstatTest_SimSce3Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/32.SAS_BICIndFullNumPredCstatTest_SimSce3Corr.sas)
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 3 simulated testing correlated data
 
-#### File name: 33.SAS_BICIndFullNumPredCstatTest_SimSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/33.SAS_BICIndFullNumPredCstatTest_SimSce3Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 33.SAS_BICIndFullNumPredCstatTest_SimSce3Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/33.SAS_BICIndFullNumPredCstatTest_SimSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/33.SAS_BICIndFullNumPredCstatTest_SimSce3Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in Scenario 3 simulated testing uncorrelated data
 
-#### File name: 34.SAS_baBICNumPredCstatTest_SimSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/34.SAS_baBICNumPredCstatTest_SimSce3Corr.txt)
-Link to File: [.txt <br>
+#### File name: 34.SAS_baBICNumPredCstatTest_SimSce3Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/34.SAS_baBICNumPredCstatTest_SimSce3Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/34.SAS_baBICNumPredCstatTest_SimSce3Corr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 3 simulated testing correlated data
 
-#### File name: 35.SAS_baBICNumPredCstatTest_SimSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/35.SAS_baBICNumPredCstatTest_SimSce3Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 35.SAS_baBICNumPredCstatTest_SimSce3Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/35.SAS_baBICNumPredCstatTest_SimSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/35.SAS_baBICNumPredCstatTest_SimSce3Uncorr.sas) <br>
 Description: SAS code to compute summary statistics for number of predictors and C-statistic for baBIC method in Scenario 3 simulated testing uncorrelated data
 
-#### File name: 36. SAS_Gen500bs](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/36.SAS_Gen500bs.txt)
-Link to File: [.txt <br>
+#### File name: 36. SAS_Gen500bs
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/36.SAS_Gen500bs.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/36.SAS_Gen500bs.sas) <br>
 Description: Generation of 500 bootstrap samples from HRS case-study data 
 
-#### File name: 37.SAS_BICbackwardIndOutcome500bs](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/37.SAS_BICbackwardIndOutcome500bs.txt)
-Link to File: [.txt <br>
+#### File name: 37.SAS_BICbackwardIndOutcome500bs
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/37.SAS_BICbackwardIndOutcome500bs.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/37.SAS_BICbackwardIndOutcome500bs.sas)<br>
 Description: Perform BIC backward elimination for individual outcomes in 500 bootstrap samples
 
-#### File name: 38.SAS_BICIndFullNumPredCstat_BS500](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/38.SAS_BICIndFullNumPredCstat_BS500.txt)
-Link to File: [.txt <br>
+#### File name: 38.SAS_BICIndFullNumPredCstat_BS500
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/38.SAS_BICIndFullNumPredCstat_BS500.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/38.SAS_BICIndFullNumPredCstat_BS500.sas) <br>
 Description: Compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in 500 bootstrap samples
 
-#### File name: 39.SAS_baBICbackward500bs](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/39.SAS_baBICbackward500bs.txt)
-Link to File: [.txt
+#### File name: 39.SAS_baBICbackward500bs
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/39.SAS_baBICbackward500bs.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/39.SAS_baBICbackward500bs.sas) <br>
 Description: Perform baBIC backward elimination in 500 bootstrap samples
 
-#### File name: 40.SAS_baBICNumPredCstat_BS500](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/40.SAS_baBICNumPredCstat_BS500.txt)
-Link to File: [.txt <br>
+#### File name: 40.SAS_baBICNumPredCstat_BS500
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/40.SAS_baBICNumPredCstat_BS500.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/40.SAS_baBICNumPredCstat_BS500.sas) <br>
 Description: Compute summary statistics for number of predictors and C-statistic for baBIC method in 500 bootstrap samples
 
-#### File name: 41a.SAS_CumIncSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/41a.SAS_CumIncSce1Corr.txt)
-Link to File: [.txt <br>
+#### File name: 41a.SAS_CumIncSce1Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/41a.SAS_CumIncSce1Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/41a.SAS_CumIncSce1Corr.sas)<br>
 Description: Compute Cumulative Incidence for Scenario 1 simulated training correlated data
 
-#### File name: 41b.R_CumIncSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/41b.R_CumIncSce1Corr.R)
-Link to File: [.R <br>
+#### File name: 41b.R_CumIncSce1Corr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/41b.R_CumIncSce1Corr.R) <br>
 Description: Plot Compute Cumulative Incidence for Scenario 1 simulated training correlated data
 
-#### File name: 42a.SAS_CumIncSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/42a.SAS_CumIncSce1Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 42a.SAS_CumIncSce1Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/42a.SAS_CumIncSce1Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/42a.SAS_CumIncSce1Uncorr.sas) <br>
 Description: Compute Cumulative Incidence for Scenario 1 simulated training uncorrelated data
 
-#### File name: 42b.R_CumIncSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/42b.R_CumIncSce1Uncorr.R)
-Link to File: [.R <br>
+#### File name: 42b.R_CumIncSce1Uncorr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/42b.R_CumIncSce1Uncorr.R) <br>
 Description: Plot Cumulative Incidence for Scenario 1 simulated training uncorrelated data
 
-#### File name: 43a.SAS_CumIncSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/43a.SAS_CumIncSce2Corr.txt)
-Link to File: [.txt <br>
+#### File name: 43a.SAS_CumIncSce2Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/43a.SAS_CumIncSce2Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/43a.SAS_CumIncSce2Corr.sas) <br>
 Description: Compute Cumulative Incidence for Scenario 2 simulated training correlated data
 
-#### File name: 43b.R_CumIncSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/43b.R_CumIncSce2Corr.R)
-Link to File: [.R <br>
+#### File name: 43b.R_CumIncSce2Corr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/43b.R_CumIncSce2Corr.R) <br>
 Description: Plot Cumulative Incidence for Scenario 2 simulated training correlated data
 
-#### File name: 44a.SAS_CumIncSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/44a.SAS_CumIncSce2Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 44a.SAS_CumIncSce2Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/44a.SAS_CumIncSce2Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/44a.SAS_CumIncSce2Uncorr.sas) <br>
 Description: Compute Cumulative Incidence for Scenario 2 simulated training uncorrelated data
 
-#### File name: 44b.R_CumIncSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/44b.R_CumIncSce2Uncorr.R)
-Link to File: [.R <br>
+#### File name: 44b.R_CumIncSce2Uncorr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/44b.R_CumIncSce2Uncorr.R) <br>
 Description: Plot Cumulative Incidence for Scenario 2 simulated training uncorrelated data
 
-#### File name: 45a.SAS_CumIncSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/45a.SAS_CumIncSce3Corr.txt)
-Link to File: [.txt <br>
+#### File name: 45a.SAS_CumIncSce3Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/45a.SAS_CumIncSce3Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/45a.SAS_CumIncSce3Corr.sas) <br>
 Description: Compute Cumulative Incidence for Scenario 3 simulated training correlated data
 
-#### File name: 45b.R_CumIncSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/45b.R_CumIncSce3Corr.R)
-Link to File: [.R <br>
+#### File name: 45b.R_CumIncSce3Corr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/45b.R_CumIncSce3Corr.R) <br>
 Description: Plot Cumulative Incidence for Scenario 3 simulated training correlated data
 
-#### File name: 46a.SAS_CumIncSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/46a.SAS_CumIncSce3Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 46a.SAS_CumIncSce3Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/46a.SAS_CumIncSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/46a.SAS_CumIncSce3Uncorr.sas) <br>
 Description: Compute Cumulative Incidence for Scenario 3 simulated training uncorrelated data
 
-#### File name: 46b.R_CumIncSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/46b.R_CumIncSce3Uncorr.R)
-Link to File: [.R <br>
+#### File name: 46b.R_CumIncSce3Uncorr
+Link to File: [.R](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/46b.R_CumIncSce3Uncorr.R) <br>
 Description: Plot Cumulative Incidence for Scenario 3 simulated training uncorrelated data
 
 
