@@ -72,80 +72,80 @@ Description: SAS code to generate simulated testing datasets with correlated out
 Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/7a.SAS_SimSce1UncorrTrain.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/7a.SAS_SimSce1UncorrTrain.sas)<br>
 Description: SAS code to generate simulated training datasets with uncorrelated outcomes and predictors from baBIC model of HRS case-study data. Compute some statistics (Scenario 1, uncorrelated outcomes)
 
-#### File name: 7b.SAS_SimSce1UncorrTest](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/7b.SAS_SimSce1UncorrTest.txt)
-Link to File: [.txt <br>
+#### File name: 7b.SAS_SimSce1UncorrTest
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/7b.SAS_SimSce1UncorrTest.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/7b.SAS_SimSce1UncorrTest.sas) <br>
 Description: SAS code to generate simulated testing datasets with uncorrelated outcomes and predictors from baBIC model of HRS case-study data. Compute some statistics (Scenario 1, uncorrelated outcomes)
 
-#### File name: 8a.SAS_SimSce2CorrTrain](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8a.SAS_SimSce2CorrTrain.txt)
-Link to File: [.txt <br>
+#### File name: 8a.SAS_SimSce2CorrTrain
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8a.SAS_SimSce2CorrTrain.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8a.SAS_SimSce2CorrTrain.sas)<br>
 Description: SAS code to generate simulated training datasets with correlated outcomes and predictors from Best Individual models of HRS case-study data. Compute some statistics (Scenario 2, correlated outcomes)
 
-#### File name: 8b.SAS_SimSce2CorrTest](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8b.SAS_SimSce2CorrTest.txt)
-Link to File: [.txt <br>
+#### File name: 8b.SAS_SimSce2CorrTest
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8b.SAS_SimSce2CorrTest.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/8b.SAS_SimSce2CorrTest.sas) <br>
 Description: SAS code to generate simulated testing datasets with correlated outcomes and predictors from Best Individual models of HRS case-study data. Compute some statistics (Scenario 2, correlated outcomes)
 
-#### File name: 9a.SAS_SimSce2UncorrTrain](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9a.SAS_SimSce2UncorrTrain.txt)
-Link to File: [.txt <br>
+#### File name: 9a.SAS_SimSce2UncorrTrain
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9a.SAS_SimSce2UncorrTrain.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9a.SAS_SimSce2UncorrTrain.sas) <br>
 Description: SAS code to generate simulated training datasets with uncorrelated outcomes and predictors from Best Individual models of HRS case-study data. Compute some statistics (Scenario 2, uncorrelated outcomes)
 
-#### File name: 9b.SAS_SimSce2UncorrTest](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9b.SAS_SimSce2UncorrTest.txt)
-Link to File: [.txt <br>
+#### File name: 9b.SAS_SimSce2UncorrTest
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9b.SAS_SimSce2UncorrTest.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/9b.SAS_SimSce2UncorrTest.sas) <br>
 Description: SAS code to generate simulated testing datasets with uncorrelated outcomes and predictors from Best Individual models of HRS case-study data. Compute some statistics (Scenario 2, uncorrelated outcomes)
 
-#### File name: 10a.SAS_SimSce3CorrTrain](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10a.SAS_SimSce3CorrTrain.txt)
-Link to File: [.txt <br>
+#### File name: 10a.SAS_SimSce3CorrTrain
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10a.SAS_SimSce3CorrTrain.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10a.SAS_SimSce3CorrTrain.sas) <br>
 Description: SAS code to generate simulated training datasets with correlated outcomes and predictors from Full model of HRS case-study data. Compute some statistics (Scenario 3, correlated outcomes)
 
-#### File name: 10b.SAS_SimSce3CorrTest](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10b.SAS_SimSce3CorrTest.txt)
-Link to File: [.txt <br>
+#### File name: 10b.SAS_SimSce3CorrTest
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10b.SAS_SimSce3CorrTest.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/10b.SAS_SimSce3CorrTest.sas) <br>
 Description: SAS code to generate simulated testing datasets with correlated outcomes and predictors from Full model of HRS case-study data. Compute some statistics (Scenario 3, correlated outcomes)
 
-#### File name: 11a.SAS_SimSce3UncorrTrain](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11a.SAS_SimSce3UncorrTrain.txt)
-Link to File: [.txt <br>
+#### File name: 11a.SAS_SimSce3UncorrTrain
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11a.SAS_SimSce3UncorrTrain.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11a.SAS_SimSce3UncorrTrain.sas) <br>
 Description: SAS code to generate simulated training datasets with uncorrelated outcomes and predictors from Full model of HRS case-study data. Compute some statistics (Scenario 3, uncorrelated outcomes)
 
-#### File name: 11b.SAS_SimSce3UncorrTest](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11b.SAS_SimSce3UncorrTest.txt)
-Link to File: [.txt <br>
+#### File name: 11b.SAS_SimSce3UncorrTest
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11b.SAS_SimSce3UncorrTest.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/11b.SAS_SimSce3UncorrTest.sas) <br>
 Description: SAS code to generate simulated testing datasets with uncorrelated outcomes and predictors from Full model of HRS case-study data. Compute some statistics (Scenario 3, uncorrelated outcomes)
 
-#### File name: 12.SAS_BICbackwardIndOutcomeSimSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/12.SAS_BICbackwardIndOutcomeSimSce1Corr.txt)
-Link to File: [.txt
+#### File name: 12.SAS_BICbackwardIndOutcomeSimSce1Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/12.SAS_BICbackwardIndOutcomeSimSce1Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/12.SAS_BICbackwardIndOutcomeSimSce1Corr.sas)
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 1 simulated training correlated data.
 
-#### File name: 13.SAS_BICbackwardIndOutcomeSimSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/13.SAS_BICbackwardIndOutcomeSimSce1Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 13.SAS_BICbackwardIndOutcomeSimSce1Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/13.SAS_BICbackwardIndOutcomeSimSce1Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/13.SAS_BICbackwardIndOutcomeSimSce1Uncorr.sas) <br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 1 simulated training uncorrelated data.
 
-#### File name: 14.SAS_baBICbackwardSimSce1Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/14.SAS_baBICbackwardSimSce1Corr.txt)
-Link to File: [.txt <br>
+#### File name: 14.SAS_baBICbackwardSimSce1Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/14.SAS_baBICbackwardSimSce1Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/14.SAS_baBICbackwardSimSce1Corr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 1 simulated training correlated data
 
-#### File name: 15.SAS_baBICbackwardSimSce1Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/15.SAS_baBICbackwardSimSce1Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 15.SAS_baBICbackwardSimSce1Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/15.SAS_baBICbackwardSimSce1Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/15.SAS_baBICbackwardSimSce1Uncorr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 1 simulated training uncorrelated data
 
-#### File name: 16.SAS_BICbackwardIndOutcomeSimSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/16.SAS_BICbackwardIndOutcomeSimSce2Corr.txt)
-Link to File: [.txt <br>
+#### File name: 16.SAS_BICbackwardIndOutcomeSimSce2Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/16.SAS_BICbackwardIndOutcomeSimSce2Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/16.SAS_BICbackwardIndOutcomeSimSce2Corr.sas) <br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 2 simulated training correlated data
 
-#### File name: 17.SAS_BICbackwardIndOutcomeSimSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/17.SAS_BICbackwardIndOutcomeSimSce2Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 17.SAS_BICbackwardIndOutcomeSimSce2Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/17.SAS_BICbackwardIndOutcomeSimSce2Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/17.SAS_BICbackwardIndOutcomeSimSce2Uncorr.sas) <br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 2 simulated training uncorrelated data
 
-#### File name: 18.SAS_baBICbackwardSimSce2Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/18.SAS_baBICbackwardSimSce2Corr.txt)
-Link to File: [.txt <br>
+#### File name: 18.SAS_baBICbackwardSimSce2Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/18.SAS_baBICbackwardSimSce2Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/18.SAS_baBICbackwardSimSce2Corr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 2 simulated training correlated data
 
-#### File name: 19.SAS_baBICbackwardSimSce2Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/19.SAS_baBICbackwardSimSce2Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 19.SAS_baBICbackwardSimSce2Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/19.SAS_baBICbackwardSimSce2Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/19.SAS_baBICbackwardSimSce2Uncorr.sas) <br>
 Description: SAS code to perform baBIC backward elimination for Scenario 2 simulated training uncorrelated data
 
-#### File name: 20.SAS_BICbackwardIndOutcomeSimSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/20.SAS_BICbackwardIndOutcomeSimSce3Corr.txt)
-Link to File: [.txt <br>
+#### File name: 20.SAS_BICbackwardIndOutcomeSimSce3Corr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/20.SAS_BICbackwardIndOutcomeSimSce3Corr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/20.SAS_BICbackwardIndOutcomeSimSce3Corr.sas)<br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 3 simulated training correlated data
 
-#### File name: 21.SAS_BICbackwardIndOutcomeSimSce3Uncorr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/21.SAS_BICbackwardIndOutcomeSimSce3Uncorr.txt)
-Link to File: [.txt <br>
+#### File name: 21.SAS_BICbackwardIndOutcomeSimSce3Uncorr
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/21.SAS_BICbackwardIndOutcomeSimSce3Uncorr.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/21.SAS_BICbackwardIndOutcomeSimSce3Uncorr.sas) <br>
 Description: SAS code to perform BIC backward elimination for individual outcomes for Scenario 3 simulated training uncorrelated data
 
 #### File name: 22.SAS_baBICbackwardSimSce3Corr](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/22.SAS_baBICbackwardSimSce3Corr.txt)
