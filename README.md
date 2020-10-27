@@ -53,7 +53,7 @@ Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selecti
 Description: SAS code to perform best average BIC (baBIC) backward elimination using HRS original dataset. It uses Cox regression for 4 outcomes and Wolbers et. al (2009) adaptation to the Competing-risk settings. baBIC=absolute(BICk-BICbest)/absolute(BICfull-BICbest): BICfull and BICbest are the BICs of the full and best individual models.
 
 #### File name: 5a.SAS_BetaCoefficientsSce1_2_3
-Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/5a.SAS_BetaCoefficientsSce1_2_3.txt) <br>
+Link to File: [.txt](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/5a.SAS_BetaCoefficientsSce1_2_3.txt) | [.sas](https://github.com/UCSFGeriatrics/multiple-outcomes-selection/blob/master/5a.SAS_BetaCoefficientsSce1_2_3.sas) <br>
 Description: Compute Beta coefficients used in Scenarios 1, 2, and 3 of the simulation study
 
 #### File name: 5b.R_CleanBetaCoefficientsSce1_2_3
