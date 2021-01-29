@@ -1,35 +1,40 @@
-############### Line Point Plot Mean Number of predictors [95% CI]   #########################
+############### Line Point Plot Mean Number of predictors  #########################
 
 setwd("path")
 
 library(ggplot2)
 
+case<-read.csv('AppendixE.csv')
+case<-subset(case, Data=="CaseStudy")
 
-#######################################################################################################################################
-#Appendix F results reformatted with 95% CI
-appendixF<-read.csv('appendixF.csv')
+#Appendix E
+appendixE<-read.csv('AppendixE.csv')
 
 #Change the order of the Methods
-appendixF$Method <- factor(appendixF$Method, levels = c("ADL", "IADL", "WALK", "DEATH", "Union", "baBIC", "Intersect", "Full"))
-#appendixF$Method2 <- factor(appendixF$Method2, levels = c("Individual ADL", "Individual IADL", "Individual WALK", "Individual DEATH", "Union", "baBIC", "Intersect", "Full"))
+appendixE$Method <- factor(appendixE$Method, levels = c("ADL", "IADL", "WALK", "DEATH", "Union", "baBIC", "Intersect", "Full"))
+#appendixE$Method2 <- factor(appendixE$Method2, levels = c("Individual ADL", "Individual IADL", "Individual WALK", "Individual DEATH", "Union", "baBIC", "Intersect", "Full"))
 
 # Modify labels for Data
-appendixF$Data <- factor(appendixF$Data, 
-                  levels = c("CaseStudy", "Scenario1_corr", "Scenario1_uncorr", "Scenario2_corr", "Scenario2_uncorr", "Scenario3_corr", "Scenario3_uncorr"),
-                  labels = c("Case-study", "Scenario 1 Correlated", "Scenario 1 Uncorrelated", "Scenario 2 Correlated", "Scenario 2 Uncorrelated", "Scenario 3 Correlated", "Scenario 3 Uncorrelated"))
+appendixE$Data <- factor(appendixE$Data, 
+                  levels = c("CaseStudy", "Scenario1_corig", "Scenario1_c25", "Scenario2_corig", "Scenario2_c25", "Scenario3_corig", "Scenario3_c25"),
+                  labels = c("Case-study", "Scenario 1 Case-study censoring", "Scenario 1 25% Censoring", "Scenario 2 Case-study censoring", "Scenario 2 25% Censoring", "Scenario 3 Case-study censoring", "Scenario 3 25% Censoring"))
 
-#appendixF
-png('FigNumPred_R.png')
+#appendix E
+png('Fig7.NumPred.png')
 
-ggplot(appendixF, aes(x = Method, y = Mean,label=Mean, color=Method)) +
+ggplot(appendixE, aes(x = Method, y = Mean,label=Mean, color=Method)) +
   geom_point(size = .8) +
-  geom_errorbar(aes(ymax = uci, ymin = lci, width = 0.1)) +
-  geom_text(aes(label=Mean),hjust=-0.2, vjust=0.5, size=2.8) +  #add labels to the points 
+  geom_text(aes(label=Mean),hjust=-0.3, vjust=0.5, size=2.8) +  #add labels to the points 
   facet_wrap(~ Data, ncol=3,  strip.position = "top") +
   theme_bw() +
   theme(strip.background =element_rect(color="black",fill="white"))+
   theme(strip.text = element_text(face="bold"))+ 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
+  ## removed box around the facet title;decrease the margin between panels and text;
+  theme(strip.background = element_blank())+
+  theme(panel.spacing = unit(0.2, "lines"))+
+  theme(text = element_text(size=10.6))+
+  theme(strip.text.x = element_text( margin = margin( b = 1, t = 0) ) )+
+  #theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
   labs(y="Mean of number of predictors") +  
   theme (axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
   theme(axis.title.y = element_text(face="bold", vjust=2)) +
@@ -60,17 +65,21 @@ ggplot(appendixF, aes(x = Method, y = Mean,label=Mean, color=Method)) +
 dev.off()
 
 
-pdf('FigNumPred_R.pdf')
+pdf('Fig7.NumPred.pdf')
 
-ggplot(appendixF, aes(x = Method, y = Mean,label=Mean, color=Method)) +
+ggplot(appendixE, aes(x = Method, y = Mean,label=Mean, color=Method)) +
   geom_point(size = .8) +
-  geom_errorbar(aes(ymax = uci, ymin = lci, width = 0.1)) +
-  geom_text(aes(label=Mean),hjust=-0.2, vjust=0.5, size=2.8) +  #add labels to the points 
+  geom_text(aes(label=Mean),hjust=-0.3, vjust=0.5, size=2.8) +  #add labels to the points 
   facet_wrap(~ Data, ncol=3,  strip.position = "top") +
   theme_bw() +
   theme(strip.background =element_rect(color="black",fill="white"))+
   theme(strip.text = element_text(face="bold"))+ 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
+  ## removed box around the facet title;decrease the margin between panels and text;
+  theme(strip.background = element_blank())+
+  theme(panel.spacing = unit(0.2, "lines"))+
+  theme(text = element_text(size=10.6))+
+  theme(strip.text.x = element_text( margin = margin( b = 1, t = 0) ) ) +
+  #theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
   labs(y="Mean of number of predictors") +  
   theme (axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
   theme(axis.title.y = element_text(face="bold", vjust=2)) +
@@ -100,7 +109,6 @@ ggplot(appendixF, aes(x = Method, y = Mean,label=Mean, color=Method)) +
 
 
 dev.off()
-
 
 
 

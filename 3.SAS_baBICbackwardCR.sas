@@ -1,9 +1,9 @@
 ***********************************************************************************************************************************************************************************;
 *Program: 3.SAS_baBICbackwardCR                                                                                                                                                    ;                                                               
-*Purpose: best average BIC (baBIC) backward elimination using HRS original dataset. It uses Cox regression for Death, and Competing-risk regression for rest of outcomes           ;  
+*Purpose: best average BIC (baBIC) backward elimination using HRS original data set. It uses Cox regression for Death, and Competing-risk regression for rest of outcomes          ;  
 *         baBIC=abs(BICk-BICbest)/abs(BICfull-BICbest)  															                                                               ;
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2020.04.24																				                                                                               ;
+*Finished: 2021.01.28																				                                                                               ;
 ***********************************************************************************************************************************************************************************;
 
 proc options option=work; run;

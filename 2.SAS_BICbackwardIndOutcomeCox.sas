@@ -1,9 +1,9 @@
-***********************************************************************************************************************************************************************************;
-*Program: 2.SAS_BICbackwardIndOutcomeCox                                                                                                                                           ;                                                               
-*Purpose: BIC backward elimination by Outcome using HRS original dataset. It uses Cox regression for 4 outcomes and Wolbers et. al (2009) adaptation to the Competing-risk settings;                                     
-*Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2020.04.24																				                                                                               ;
-***********************************************************************************************************************************************************************************;
+************************************************************************************************************************************************************************************;
+*Program: 2.SAS_BICbackwardIndOutcomeCox                                                                                                                                            ;                                                               
+*Purpose: BIC backward elimination by Outcome using HRS original data set. It uses Cox regression for 4 outcomes and Wolbers et. al (2009) adaptation to the Competing-risk settings;                                     
+*Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                                ;
+*Finished: 2021.01.28																				                                                                                ;
+************************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
 proc options option=work; run;
@@ -181,20 +181,46 @@ run;
 *Create union of the best individual models for each outcome;
 
 data savedata.BIC_BestModelsUnionNoCompRisk (drop=delims i variable allvars);
- set BIC;
- length allvars $1000;
- length variable jointvars $600;
- allvars=compbl(catx(" ", VARINMODEL_adl, VARINMODEL_iadl, VARINMODEL_walk, VARINMODEL_death)); 
- delims = ' ';                 
- do i=1 to countw(allvars, delims); /*countw: for line of text, how many words/variables?*/
-  variable=scan(allvars,i,delims); /*extract "words" from a string*/
-  if indexw(jointvars,variable) then continue; /*CONTINUE statement stops the processing of the current iteration of a loop and resumes with the next iteration*/
-  /*INDEXW(character-value, find-string): The function returns the first position in the character-value that contains the find-string. If the find-string is not found, the function returns a 0.*/
-  jointvars=compbl(catx(" ",jointvars,variable));
+ set BIC ;
+ length  union inters $1000;
+
+ array x{39} $ 32; /*maximum of 39 predictors in Full model*/
+
+ n=0; 
+
+ do i=1 to countw(VARINMODEL_adl,' ');
+  temp=scan(VARINMODEL_adl,i,' ');
+  if temp not in x then do; n+1; x{n}=temp; end;
  end;
- numVarsfinjoint=countw(jointvars, delims);
+
+ do i=1 to countw(VARINMODEL_iadl,' ');
+  temp=scan(VARINMODEL_iadl,i,' ');
+  if temp not in x then do; n+1; x{n}=temp; end;
+  else if temp in x and indexw(VARINMODEL_walk,temp) and indexw(VARINMODEL_death,temp) then inters=catx(' ',inters,temp);
+ end;
+
+ do i=1 to countw(VARINMODEL_walk,' ');
+  temp=scan(VARINMODEL_walk,i,' ');
+  if temp not in x then do; n+1; x{n}=temp; end;
+ end;
+
+ do i=1 to countw(VARINMODEL_death,' ');
+  temp=scan(VARINMODEL_death,i,' ');
+  if temp not in x then do; n+1; x{n}=temp; end;
+ end;
+
+ union=catx(' ',of x{*});
+
+ delims = ' ';
+ numVarsfinsim_union=countw(union, delims);
+ numVarsfinsim_inters=countw(inters, delims);
+
+ numVarsfinsimadl=countw(VARINMODEL_adl, delims);
+ numVarsfinsimiadl=countw(VARINMODEL_iadl, delims);
+ numVarsfinsimwalk=countw(VARINMODEL_walk, delims);
+ numVarsfinsimdeath=countw(VARINMODEL_death, delims);
+
 run;
-proc delete data=BIC; run; quit;
 
 ods select all; /*to print results below*/
 ods listing close; /*turn of the output window / "listing" output, so I don't get WARNING: Data too long for column*/

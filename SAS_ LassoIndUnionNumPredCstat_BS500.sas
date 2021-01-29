@@ -2,7 +2,7 @@
 *Program: SAS_ LassoIndUnionNumPredCstat_BS500                                                                                                                                     ;                                                               
 *Purpose: Compute summary statistics for number of predictors and C-statistic for LASSO Individual and Union Methods using 500 bootstrap samples                                   ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2020.10.21																				                                                                               ;
+*Finished: 2021.01.28																				                                                                               ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -138,7 +138,7 @@ proc delete data=bsample; run; quit;
 
 *Get union model from LASSO individual models in Case-study data;
 PROC IMPORT OUT= WORK.lasso_original 
-            DATAFILE= "\\r01sfchsm03.r01.med.va.gov\Workgroups\Health and Retirement Study\Grisell\AlexSei\R01eprognosisOutcomes2\sasdata\resubmission1_CMPB\bootstrapping\LASSO\lasso_original.csv" 
+            DATAFILE= "path\lasso_original.csv" 
             DBMS=CSV REPLACE;
      GETNAMES=YES;
      DATAROW=2; 
