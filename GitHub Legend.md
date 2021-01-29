@@ -1,9 +1,9 @@
 # Title: A Novel Method for Identifying a Parsimonious and Accurate Predictive Model for Multiple Clinical Outcomes
 ## L. Grisell Diaz-Ramirez MS,a,b Sei J. Lee MD,a,b Alexander K. Smith MD,a,b Siqi Gan MS,a,b W. John Boscardin PhDa,b
-###a Division of Geriatrics, University of California, San Francisco
-###490 Illinois Street, Floor 08, Box 1265, San Francisco, CA 94143, United States
-###b San Francisco Veterans Affairs (VA) Medical Center
-###4150 Clement Street, 181G, San Francisco, CA 94121, United States
+### a Division of Geriatrics, University of California, San Francisco
+### 490 Illinois Street, Floor 08, Box 1265, San Francisco, CA 94143, United States
+### b San Francisco Veterans Affairs (VA) Medical Center
+### 4150 Clement Street, 181G, San Francisco, CA 94121, United States
 
 Description of data and SAS and R codes for reproducing the results of this article:
 File name: originaldata
