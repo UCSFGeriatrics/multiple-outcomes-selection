@@ -5,7 +5,7 @@ a Division of Geriatrics, University of California, San Francisco
 b San Francisco Veterans Affairs (VA) Medical Center
 4150 Clement Street, 181G, San Francisco, CA 94121, United States
 
-Description of data and SAS and R codes for reproducing the results of this article:
+## Description of data and SAS and R codes for reproducing the results of this article:
 
 ### File name: originaldata
 File format: .csv
