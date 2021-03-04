@@ -4,9 +4,6 @@ setwd("path")
 
 library(ggplot2)
 
-case<-read.csv('AppendixE.csv')
-case<-subset(case, Data=="CaseStudy")
-
 #Appendix E
 appendixE<-read.csv('AppendixE.csv')
 
@@ -24,6 +21,7 @@ png('Fig7.NumPred.png')
 
 ggplot(appendixE, aes(x = Method, y = Mean,label=Mean, color=Method)) +
   geom_point(size = .8) +
+  geom_errorbar(aes(ymax = upper, ymin = lower, width = 0.1)) +
   geom_text(aes(label=Mean),hjust=-0.3, vjust=0.5, size=2.8) +  #add labels to the points 
   facet_wrap(~ Data, ncol=3,  strip.position = "top") +
   theme_bw() +
@@ -69,6 +67,7 @@ pdf('Fig7.NumPred.pdf')
 
 ggplot(appendixE, aes(x = Method, y = Mean,label=Mean, color=Method)) +
   geom_point(size = .8) +
+  geom_errorbar(aes(ymax = upper, ymin = lower, width = 0.1)) +
   geom_text(aes(label=Mean),hjust=-0.3, vjust=0.5, size=2.8) +  #add labels to the points 
   facet_wrap(~ Data, ncol=3,  strip.position = "top") +
   theme_bw() +
@@ -109,6 +108,3 @@ ggplot(appendixE, aes(x = Method, y = Mean,label=Mean, color=Method)) +
 
 
 dev.off()
-
-
-
