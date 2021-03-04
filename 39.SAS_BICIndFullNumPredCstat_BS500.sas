@@ -2,7 +2,7 @@
 *Program: 39.SAS_BICIndFullNumPredCstat_BS500                                                                                                                                      ;                                                               
 *Purpose: Compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in 500 bootstrap samples                          ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2021.01.28																				                                                                               ;
+*Finished: 2021.03.01																				                                                                               ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -450,6 +450,16 @@ proc delete data=concord ; run; quit;
 *Save cstat data;
 data outdata.cstat_original; set cstat; run;
 
+*Add 95% CI to original data;
+data outdata.cstat_original_95CI;
+  set outdata.cstat_original;
+  lcl_95=estimate - quantile('normal', 0.975)*stderr;
+  ucl_95=estimate + quantile('normal', 0.975)*stderr;
+run;
+
+proc print data=outdata.cstat_original_95CI; run;
+
+
 /*** Fit each of the BS model (obtained using BS data) on the original case study data and calculate their C-statistic (C-stat-Original) ***/
 
 data originaldata; 
@@ -778,3 +788,233 @@ PROC EXPORT DATA= outdata.c_statCorrect
      PUTNAMES=YES;
 RUN;
 
+/****************************************************************************************************************************************************************************************/
+*Compute Location-shifted bootstrap confidence interval;
+
+/*
+Reference: as of 2.26.2021
+Noma H, Shinozaki T, Iba K, Teramukai S, Furukawa TA. Confidence intervals of prediction accuracy measures for multivariable prediction models based
+on the bootstrap-based optimism correction methods. arXiv preprint arXiv:2005.01457. https://arxiv.org/ftp/arxiv/papers/2005/2005.01457.pdf
+*/
+
+/*Method description:
+Algorithm 1 (Location-shifted bootstrap confidence interval)
+1. For a multivariable prediction model, let theta_hat_app be the apparent predictive measure for the derivation population and
+   let theta_hat be the optimism-corrected predictive measure obtained from the Harrell’s bias correction, 0.632, or 0.632+ method.
+2. In the computational processes of theta_hat, we can obtain a bootstrap estimate of the sampling distribution of theta_hat_app from the B bootstrap samples.
+   Compute the bootstrap confidence interval of theta_app from the bootstrap distribution, (theta_hat_app_L, theta_hat_app_U); 
+   for the 95% confidence interval, they are typically calculated by the 2.5th and 97.5th percentiles of the bootstrap distribution.
+3. Calculate the bias estimate by optimism, delta_hat=theta_hat_app-theta_hat
+4. Then, the location-shifted bootstrap confidence interval is computed as (theta_hat_app_L- theta_hat, theta_hat_app_U- theta_hat)
+*/
+
+*Custom percentiles individual;
+proc stdize data=outdata.bicbs500by2 PctlMtd=ORD_STAT outstat=ind pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+ 
+data ind;
+ set ind;
+ where _type_ =: 'P';
+run;
+
+proc print data=ind noobs; run;
+
+proc transpose data=ind out=wide ;
+   by _type_;
+   var C_adl C_iadl C_walk C_death;
+run;
+data wide (drop=_NAME_ _type_);
+ set wide (rename=(col1=P2_5));
+ length Variable $32;
+ if _NAME_="C_adl" then Variable="optimism_ind_adl";
+ else if _NAME_="C_iadl" then Variable="optimism_ind_iadl";
+ else if _NAME_="C_walk" then Variable="optimism_ind_walk";
+ else if _NAME_="C_death" then Variable="optimism_ind_death";
+
+ if _type_="P97_5000" and Variable="optimism_ind_adl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_ind_iadl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_ind_walk" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_ind_death" then P97_5=P2_5;
+run;
+data wide2_5 (drop=p97_5);
+ set wide ;
+ where P97_5=.;
+proc sort; by Variable; run;
+data wide97_5 (drop=p2_5);
+ set wide ;
+ where P97_5 ne .;
+proc sort; by Variable; run;
+data ind;
+ retain Variable P2_5 P97_5;
+ merge wide2_5 wide97_5;
+ by Variable;
+run;
+proc print data=ind; run;
+
+proc delete data=wide wide2_5 wide97_5; run;
+
+*Custom percentiles union;
+proc stdize data=outdata.bicbs500byunionc PctlMtd=ORD_STAT outstat=union pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+ 
+data union;
+ set union;
+ where _type_ =: 'P';
+run;
+
+proc print data=union noobs; run;
+
+proc transpose data=union out=wide ;
+   by _type_;
+   var C_adl C_iadl C_walk C_death;
+run;
+data wide (drop=_NAME_ _type_ _label_);
+ set wide (rename=(col1=P2_5));
+ length Variable $32;
+ if _NAME_="c_adl" then Variable="optimism_union_adl";
+ else if _NAME_="c_iadl" then Variable="optimism_union_iadl";
+ else if _NAME_="c_walk" then Variable="optimism_union_walk";
+ else if _NAME_="c_death" then Variable="optimism_union_death";
+
+ if _type_="P97_5000" and Variable="optimism_union_adl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_union_iadl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_union_walk" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_union_death" then P97_5=P2_5;
+run;
+data wide2_5 (drop=p97_5);
+ set wide ;
+ where P97_5=.;
+proc sort; by Variable; run;
+data wide97_5 (drop=p2_5);
+ set wide ;
+ where P97_5 ne .;
+proc sort; by Variable; run;
+data union;
+ retain Variable P2_5 P97_5;
+ merge wide2_5 wide97_5;
+ by Variable;
+run;
+proc print data=union; run;
+
+proc delete data=wide wide2_5 wide97_5; run;
+
+
+*Custom percentiles intersection;
+proc stdize data=outdata.bicbs500byintersectc PctlMtd=ORD_STAT outstat=inters pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+ 
+data inters;
+ set inters;
+ where _type_ =: 'P';
+run;
+
+proc print data=inters noobs; run;
+
+proc transpose data=inters out=wide ;
+   by _type_;
+   var C_adl C_iadl C_walk C_death;
+run;
+data wide (drop=_NAME_ _type_ _label_);
+ set wide (rename=(col1=P2_5));
+ length Variable $32;
+ if _NAME_="c_adl" then Variable="optimism_intersect_adl";
+ else if _NAME_="c_iadl" then Variable="optimism_intersect_iadl";
+ else if _NAME_="c_walk" then Variable="optimism_intersect_walk";
+ else if _NAME_="c_death" then Variable="optimism_intersect_death";
+
+ if _type_="P97_5000" and Variable="optimism_intersect_adl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_intersect_iadl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_intersect_walk" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_intersect_death" then P97_5=P2_5;
+run;
+data wide2_5 (drop=p97_5);
+ set wide ;
+ where P97_5=.;
+proc sort; by Variable; run;
+data wide97_5 (drop=p2_5);
+ set wide ;
+ where P97_5 ne .;
+proc sort; by Variable; run;
+data inters;
+ retain Variable P2_5 P97_5;
+ merge wide2_5 wide97_5;
+ by Variable;
+run;
+proc print data=inters; run;
+
+proc delete data=wide wide2_5 wide97_5; run;
+
+*Custom percentiles full;
+proc stdize data=outdata.bicbs500fullc PctlMtd=ORD_STAT outstat=full pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+ 
+data full;
+ set full;
+ where _type_ =: 'P';
+run;
+
+proc print data=full noobs; run;
+
+proc transpose data=full out=wide ;
+   by _type_;
+   var C_adl C_iadl C_walk C_death;
+run;
+data wide (drop=_NAME_ _type_ _label_);
+ set wide (rename=(col1=P2_5));
+ length Variable $32;
+ if _NAME_="c_adl" then Variable="optimism_full_adl";
+ else if _NAME_="c_iadl" then Variable="optimism_full_iadl";
+ else if _NAME_="c_walk" then Variable="optimism_full_walk";
+ else if _NAME_="c_death" then Variable="optimism_full_death";
+
+ if _type_="P97_5000" and Variable="optimism_full_adl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_full_iadl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_full_walk" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_full_death" then P97_5=P2_5;
+run;
+data wide2_5 (drop=p97_5);
+ set wide ;
+ where P97_5=.;
+proc sort; by Variable; run;
+data wide97_5 (drop=p2_5);
+ set wide ;
+ where P97_5 ne .;
+proc sort; by Variable; run;
+data full;
+ retain Variable P2_5 P97_5;
+ merge wide2_5 wide97_5;
+ by Variable;
+run;
+proc print data=full; run;
+
+proc delete data=wide wide2_5 wide97_5; run;
+
+data all;
+ set ind union inters full;
+proc sort; by variable; run; 
+proc print data=all; run;
+
+proc print data=outdata.c_statcorrect; run;
+
+data all2;
+ merge outdata.c_statcorrect all;
+ by Variable;
+ P2_5correct=P2_5-Mean; /*Mean: optimism estimate*/
+ P97_5correct=P97_5-Mean;
+run;
+proc print data=all2; run;
+
+*Save permanent data;
+data outdata.c_statcorrect_percentiles;
+ set all2;
+run;
+
+PROC EXPORT DATA= outdata.c_statcorrect_percentiles
+            OUTFILE= "path\c_statcorrect_percentiles.csv" 
+            DBMS=CSV REPLACE;
+     PUTNAMES=YES;
+RUN;

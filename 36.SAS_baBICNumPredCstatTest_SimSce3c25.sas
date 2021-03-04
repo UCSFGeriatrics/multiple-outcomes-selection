@@ -2,7 +2,7 @@
 *Program: 36.SAS_baBICNumPredCstatTest_SimSce3c25                                                                                                                                  ;                                                               
 *Purpose: Compute summary statistics for number of predictors and C-statistic for baBIC method in simulations of Scenario 3 with 25% censoring and testing data                    ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2021.01.28																				                                                                               ;
+*Finished: 2021.02.25																				                                                                               ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -36,6 +36,22 @@ PROC EXPORT DATA= outtrain.bicsimbabic_Sce3c25_stats
             DBMS=CSV REPLACE;
      PUTNAMES=YES;
 RUN;
+
+
+*Custom percentiles: https://blogs.sas.com/content/iml/2013/10/23/percentiles-in-a-tabular-format.html;
+proc stdize data=&trainmodels PctlMtd=ORD_STAT outstat=&trainmodels._percentile pctlpts=2.5, 97.5;
+ var numVarsfinsim ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data &trainmodels._percentile;
+ set &trainmodels._percentile;
+ where _type_ =: 'P';
+run;
+
+proc print data=&trainmodels._percentile noobs; run;
 
 
 *****************************************************PREPARE TESTING SIMULATED DATA FOR MACRO ********************************************************;
@@ -168,6 +184,25 @@ PROC EXPORT DATA= outtest.c_baBICSce3c25_means
      PUTNAMES=YES;
 RUN;
 
+*Custom percentiles baBIC;
+proc stdize data=outtest.c_baBICsce3c25 PctlMtd=ORD_STAT outstat=outtest.c_baBICsce3c25_percentiles pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data outtest.c_baBICsce3c25_percentiles;
+ set outtest.c_baBICsce3c25_percentiles;
+ where _type_ =: 'P';
+ C_adl=round(C_adl,0.01);
+ C_iadl=round(C_iadl,0.01);
+ C_walk=round(C_walk,0.01);
+ C_death=round(C_death,0.01);
+ format C_adl C_iadl C_walk C_death 5.2;
+run;
+
+proc print data=outtest.c_baBICsce3c25_percentiles noobs; run;
 
 
 

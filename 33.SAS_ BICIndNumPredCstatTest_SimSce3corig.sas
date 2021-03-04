@@ -2,7 +2,7 @@
 *Program: 33.SAS_BICIndNumPredCstatTest_SimSce3corig                                                                                                                                                       ;                                                               
 *Purpose: Compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersection, and Full methods in simulations of Scenario 3 with case-study censoring and testing data;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                                                       ;
-*Finished: 2021.01.28																				                                                                                                       ;
+*Finished: 2021.02.25																				                                                                                                       ;
 ***********************************************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -86,6 +86,22 @@ PROC EXPORT DATA= &trainmodels._stats
 RUN;
 
 proc delete data=BICsim; run; quit;
+
+*Custom percentiles: https://blogs.sas.com/content/iml/2013/10/23/percentiles-in-a-tabular-format.html;
+proc stdize data=&trainmodels PctlMtd=ORD_STAT outstat=&trainmodels._percentiles pctlpts=2.5, 97.5;
+ var numVarsfinsimadl numVarsfinsimiadl numVarsfinsimwalk numVarsfinsimdeath numVarsfinsim_union numVarsfinsim_inters ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data &trainmodels._percentiles;
+ set &trainmodels._percentiles;
+ where _type_ =: 'P';
+run;
+
+proc print data=&trainmodels._percentiles noobs; run;
+
 
 
 *****************************************************PREPARE TESTING SIMULATED DATA FOR MACRO ********************************************************;
@@ -290,6 +306,27 @@ PROC EXPORT DATA= outtest.c_indSce3corig_means
      PUTNAMES=YES;
 RUN;
 
+*Custom percentiles individual;
+proc stdize data=outtest.c_indsce3corig PctlMtd=ORD_STAT outstat=outtest.c_indsce3corig_percentiles pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data outtest.c_indsce3corig_percentiles;
+ set outtest.c_indsce3corig_percentiles;
+ where _type_ =: 'P';
+ C_adl=round(C_adl,0.01);
+ C_iadl=round(C_iadl,0.01);
+ C_walk=round(C_walk,0.01);
+ C_death=round(C_death,0.01);
+ format C_adl C_iadl C_walk C_death 5.2;
+run;
+
+proc print data=outtest.c_indsce3corig_percentiles noobs; run;
+
+
 *Summary stats of union training simulated models on baBIC testing simulated data;
 proc means data=outtest.c_unionSce3corig stackodsoutput n mean stderr clm  maxdec=4; 
  var C_avg C_adl C_iadl C_walk C_death;
@@ -301,6 +338,27 @@ PROC EXPORT DATA= outtest.c_unionSce3corig_means
             DBMS=CSV REPLACE;
      PUTNAMES=YES;
 RUN;
+
+*Custom percentiles union;
+proc stdize data=outtest.c_unionsce3corig PctlMtd=ORD_STAT outstat=outtest.c_unionsce3corig_percentiles pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data outtest.c_unionsce3corig_percentiles;
+ set outtest.c_unionsce3corig_percentiles;
+ where _type_ =: 'P';
+ C_adl=round(C_adl,0.01);
+ C_iadl=round(C_iadl,0.01);
+ C_walk=round(C_walk,0.01);
+ C_death=round(C_death,0.01);
+ format C_adl C_iadl C_walk C_death 5.2;
+run;
+
+proc print data=outtest.c_unionsce3corig_percentiles noobs; run;
+
 
 *Summary stats of inters training simulated models on baBIC testing simulated data;
 proc means data=outtest.c_intersSce3corig stackodsoutput n mean stderr clm  maxdec=4; 
@@ -314,6 +372,28 @@ PROC EXPORT DATA= outtest.c_intersSce3corig_means
      PUTNAMES=YES;
 RUN;
 
+
+*Custom percentiles inters;
+proc stdize data=outtest.c_interssce3corig PctlMtd=ORD_STAT outstat=outtest.c_interssce3corig_percentiles pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data outtest.c_interssce3corig_percentiles;
+ set outtest.c_interssce3corig_percentiles;
+ where _type_ =: 'P';
+ C_adl=round(C_adl,0.01);
+ C_iadl=round(C_iadl,0.01);
+ C_walk=round(C_walk,0.01);
+ C_death=round(C_death,0.01);
+ format C_adl C_iadl C_walk C_death 5.2;
+run;
+
+proc print data=outtest.c_interssce3corig_percentiles noobs; run;
+
+
 *Summary stats of full training simulated models on baBIC testing simulated data;
 proc means data=outtest.c_fullSce3corig stackodsoutput n mean stderr clm  maxdec=4; 
  var C_avg C_adl C_iadl C_walk C_death;
@@ -325,3 +405,23 @@ PROC EXPORT DATA= outtest.c_fullSce3corig_means
             DBMS=CSV REPLACE;
      PUTNAMES=YES;
 RUN;
+
+*Custom percentiles full;
+proc stdize data=outtest.c_fullsce3corig PctlMtd=ORD_STAT outstat=outtest.c_fullsce3corig_percentiles pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+/*Specify the PCTLMTD= option so that the algorithm uses the traditional "sort the data" algorithm for computing percentiles,
+rather than a newer one-pass algorithm. Although the one-pass algorithm is very fast and well-suited for computing the median, 
+it is not recommended for computing extreme percentiles such as the 2.5th and 97.5th.*/
+ 
+data outtest.c_fullsce3corig_percentiles;
+ set outtest.c_fullsce3corig_percentiles;
+ where _type_ =: 'P';
+ C_adl=round(C_adl,0.01);
+ C_iadl=round(C_iadl,0.01);
+ C_walk=round(C_walk,0.01);
+ C_death=round(C_death,0.01);
+ format C_adl C_iadl C_walk C_death 5.2;
+run;
+
+proc print data=outtest.c_fullsce3corig_percentiles noobs; run;

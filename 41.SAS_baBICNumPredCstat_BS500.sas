@@ -2,7 +2,7 @@
 *Program: 41.SAS_baBICNumPredCstat_BS500                                                                                                                                           ;                                                               
 *Purpose: Compute summary statistics for number of predictors and C-statistic for baBIC method in 500 bootstrap samples                                                            ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
-*Finished: 2021.01.28																				                                                                               ;
+*Finished: 2021.03.01																				                                                                               ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -202,4 +202,96 @@ PROC EXPORT DATA= outdata.c_statCorrectbaBIC
      PUTNAMES=YES;
 RUN;
 
+/****************************************************************************************************************************************************************************************/
+*Compute Location-shifted bootstrap confidence interval;
 
+/*
+Reference: as of 2.26.2021
+Noma H, Shinozaki T, Iba K, Teramukai S, Furukawa TA. Confidence intervals of prediction accuracy measures for multivariable prediction models based
+on the bootstrap-based optimism correction methods. arXiv preprint arXiv:2005.01457. https://arxiv.org/ftp/arxiv/papers/2005/2005.01457.pdf
+*/
+
+/*Method description:
+Algorithm 1 (Location-shifted bootstrap confidence interval)
+1. For a multivariable prediction model, let theta_hat_app be the apparent predictive measure for the derivation population and
+   let theta_hat be the optimism-corrected predictive measure obtained from the Harrell’s bias correction, 0.632, or 0.632+ method.
+2. In the computational processes of theta_hat, we can obtain a bootstrap estimate of the sampling distribution of theta_hat_app from the B bootstrap samples.
+   Compute the bootstrap confidence interval of theta_app from the bootstrap distribution, (theta_hat_app_L, theta_hat_app_U); 
+   for the 95% confidence interval, they are typically calculated by the 2.5th and 97.5th percentiles of the bootstrap distribution.
+3. Calculate the bias estimate by optimism, delta_hat=theta_hat_app-theta_hat
+4. Then, the location-shifted bootstrap confidence interval is computed as (theta_hat_app_L- theta_hat, theta_hat_app_U- theta_hat)
+*/
+
+
+/**********************************
+2. In the computational processes of theta_hat, we can obtain a bootstrap estimate of the sampling distribution of ??_hat_app from the B bootstrap samples.
+   Compute the bootstrap confidence interval of theta_app from the bootstrap distribution, (theta_hat_app_L, theta_hat_app_U); 
+   for the 95% confidence interval, they are typically calculated by the 2.5th and 97.5th percentiles of the bootstrap distribution.
+*/
+
+*Custom percentiles baBIC;
+proc stdize data=outdata.bicrep500 PctlMtd=ORD_STAT outstat=baBIC pctlpts=2.5, 97.5;
+ var C_adl C_iadl C_walk C_death ;
+run;
+ 
+data baBIC;
+ set baBIC;
+ where _type_ =: 'P';
+run;
+
+proc print data=baBIC noobs; run;
+
+proc transpose data=baBIC out=wide ;
+   by _type_;
+   var C_adl C_iadl C_walk C_death;
+run;
+data wide (drop=_NAME_ _type_);
+ set wide (rename=(col1=P2_5));
+ length Variable $32;
+ if _NAME_="C_adl" then Variable="optimism_baBIC_adl";
+ else if _NAME_="C_iadl" then Variable="optimism_baBIC_iadl";
+ else if _NAME_="C_walk" then Variable="optimism_baBIC_walk";
+ else if _NAME_="C_death" then Variable="optimism_baBIC_death";
+
+ if _type_="P97_5000" and Variable="optimism_baBIC_adl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_baBIC_iadl" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_baBIC_walk" then P97_5=P2_5;
+ else if _type_="P97_5000" and Variable="optimism_baBIC_death" then P97_5=P2_5;
+run;
+data wide2_5 (drop=p97_5);
+ set wide ;
+ where P97_5=.;
+proc sort; by Variable; run;
+data wide97_5 (drop=p2_5);
+ set wide ;
+ where P97_5 ne .;
+proc sort; by Variable; run;
+data baBIC;
+ retain Variable P2_5 P97_5;
+ merge wide2_5 wide97_5;
+ by Variable;
+run;
+proc print data=baBIC; run;
+
+proc delete data=wide wide2_5 wide97_5; run;
+
+proc print data=outdata.c_statCorrectbaBIC; run;
+
+data baBIC2;
+ merge outdata.c_statCorrectbaBIC baBIC;
+ by Variable;
+ P2_5correct=P2_5-Mean; /*Mean: optimism estimate*/
+ P97_5correct=P97_5-Mean;
+run;
+proc print data=baBIC2; run;
+
+*Save permanent data;
+data outdata.c_statcorrectbaBIC_percentiles;
+ set baBIC2;
+run;
+
+PROC EXPORT DATA= outdata.c_statcorrectbaBIC_percentiles
+            OUTFILE= "path\c_statcorrectbaBIC_percentiles.csv" 
+            DBMS=CSV REPLACE;
+     PUTNAMES=YES;
+RUN;
