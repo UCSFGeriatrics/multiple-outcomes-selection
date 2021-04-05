@@ -4,12 +4,10 @@ This respository corresponds to manuscript as cited:
 Diaz-Ramirez LG, Lee SJ, Smith AK, Gan S, Boscardin WJ. A Novel Method for Identifying a Parsimonious and Accurate Predictive Model for Multiple Clinical Outcomes. Computer Methods and Programs in Biomedicine 204, 2021. https://doi.org/10.1016/j.cmpb.2021.106073  
 
 # Manuscript Info
-## Title
-A Novel Method for Identifying a Parsimonious and Accurate Predictive Model for Multiple Clinical Outcomes,
+Title: A Novel Method for Identifying a Parsimonious and Accurate Predictive Model for Multiple Clinical Outcomes,
 Computer Methods and Programs in Biomedicine,
 
-## Authors: 
-L. Grisell Diaz-Ramirez, Sei J. Lee, Alexander K. Smith, Siqi Gan, W. John Boscardin,
+Authors: L. Grisell Diaz-Ramirez, Sei J. Lee, Alexander K. Smith, Siqi Gan, W. John Boscardin,
 
 Volume 204,
 2021,
