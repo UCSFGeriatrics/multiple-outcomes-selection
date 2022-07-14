@@ -3,6 +3,8 @@
 *Purpose: Compute summary statistics for number of predictors and C-statistic for baBIC method in 500 bootstrap samples                                                            ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
 *Finished: 2021.03.01																				                                                                               ;
+*Modified: 2022.07.09																				                                                                               ;
+*Reason modified: Recompute C-stat-Original as described below                                                                                                                     ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -19,16 +21,9 @@ options noquotelenmax; /*supress warning: THE QUOTED STRING CURRENTLY BEING PROC
 *options errorabend; /*so the process stops as soon as an error is encountered*/
 ods select none; /*to create output data sets through the ODS OUTPUT statement and suppress the display of all output*/
 
-***************************************************** Calculate Optimism Corrected C-statistic for baBIC models ******************************************************************;
 
-/*** Fit each of the BS model (obtained using BS data) on the original case study data and calculate their C-statistic (C-stat-Original) ***/
+***************************************************** Number of predictors ******************************************************************;
 
-data originaldata; 
- set savedata.originaldata; 
- if status_adldepdth=2 then do; status_adldepdth=0; time_adldepdth=15.0278689; end;
- if status_iadldifdth=2 then do; status_iadldifdth=0; time_iadldifdth=15.0278689; end;
- if status_walkdepdth=2 then do; status_walkdepdth=0; time_walkdepdth=15.0278689; end;
-run;
 
 data baBICbs; 
  set outdata.bicrep500;
@@ -37,7 +32,7 @@ run;
 proc means data=baBICbs n mean std stderr clm median p25 p75 maxdec=4; var numVarsfinsim; run;
 
 
-*Custom percentiles for 95% bootstrap confidence interval:
+*Custom percentiles for 95% bootstrap confidence interval:;
 proc stdize data=baBICbs PctlMtd=ORD_STAT outstat=outdata.baBICbs500_95CI pctlpts=2.5, 97.5;
  var numVarsfinsim;
 run;
@@ -53,7 +48,73 @@ run;
 proc print data=outdata.baBICbs500_95CI noobs; run;
 
 
+
+*****************************************************PREPARE DATA FOR MACRO ********************************************************;
+
+data originaldata; 
+ set savedata.originaldata; 
+ if status_adldepdth=2 then do; status_adldepdth=0; time_adldepdth=15.0278689; end;
+ if status_iadldifdth=2 then do; status_iadldifdth=0; time_iadldifdth=15.0278689; end;
+ if status_walkdepdth=2 then do; status_walkdepdth=0; time_walkdepdth=15.0278689; end;
+run;
+proc freq data=originaldata; tables status_adldepdth status_iadldifdth status_walkdepdth; run; 
+
+proc sort data=savedata.bs500 out=bsample; by newid; run; 
+
+*Merge with original dataset to get the covariates;
+data bsample2; 
+  merge savedata.originaldata bsample (in=A);
+  by newid;
+  if A;
+run;
+/*2,765,500 observations and 64+1=65 variables.*/
+
+data bsample2;
+ set bsample2; 
+ if status_adldepdth=2 then do; status_adldepdth=0; time_adldepdth=15.0278689; end;
+ if status_iadldifdth=2 then do; status_iadldifdth=0; time_iadldifdth=15.0278689; end;
+ if status_walkdepdth=2 then do; status_walkdepdth=0; time_walkdepdth=15.0278689; end;
+proc sort; by replicate newid; run;
+
+proc contents data=bsample2; run;
+proc freq data=bsample2; tables replicate; run;
+proc freq data=bsample2; tables status_adldepdth status_iadldifdth status_walkdepdth; run; 
+
+proc delete data=bsample; run; quit;
+
+
+***************************************************** Calculate Optimism Corrected C-statistic for baBIC models ******************************************************************;
+
+/*** Fit each of the BS model (obtained using BS data) on the original case study data and calculate their C-statistic (C-stat-Original)
+
+In previous version, we used the variables selected in each bootstrap model to fit the model with these variables in the original data
+This could be thought as bootstrap of the selection method.
+
+The general steps are:
+1) Obtain final model and corresponding C-statistic on the case study data, namely C-statistic-apparent
+2) Obtain final models of each bootstrap sample and compute the C-statistic of each bootstrap model, namely C-statistic-boot
+3) Compute the C-statistic of each bootstrap model evaluated in the original case-study data, namely C-statistic-original
+
+A more correct way is:
+"Freeze" the model obtained in 2 and obtain the C-statistic of each bootstrap model evaluated in the original data, this means:
+3a) use the coefficient estimates from bootstrap model to obtain predictions in original data:
+
+Model 1: PHREG and STORE=item-store statement: requests that the fitted model be saved to an item store
+Model 2: PLM restore=item-store created in 1)
+         SCORE data=&DATAorig out=BSOUT predicted: score (Linear predictor) new observations based on the item store that was created in Model1
+
+3b) use predictions in 3a) as covariate in model fitted in orginal data
+Model 3: PHREG with MODEL statement and NOFIT option and ROC statement using PRED=predicted 
+         This gives the same C-statistic as having the MODEL statement with covariate predicted
+
+These updates do not cause any significant changes in our results
+
+***/
+
+
 *Define macro variables;
+%let DATAorig=originaldata;
+%let DATAboot=bsample3;
 %let NUMOUTCOMES=4; /*number of outcomes*/
 %let ALLOUTCOME=status_adldepdth status_iadldifdth status_walkdepdth death;
 %let ALLTIME=time_adldepdth time_iadldifdth time_walkdepdth time2death;
@@ -63,8 +124,16 @@ proc sql noprint; select max(replicate) format 3. into :S from baBICbs; quit; /*
 
 %macro c_bs_ori(model=);
  %do i=1 %to &S;
- /*For each bs model define VARNAME as VARINMODEL*/
 
+  proc sql noprint; select (&i-1)*(nobs/&S)+1 into :fobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the first id of ith bs dataset*/
+  proc sql noprint; select &i*(nobs/&S) into :lobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the last id of ith bs dataset*/
+
+  data bsample3;
+   set bsample2 (FIRSTOBS=&fobs OBS=&lobs);
+  run;
+  sasfile WORK.bsample3 load;
+
+    /*For each bs dataset define VARNAME as the baBIC model*/
 	  data _null_;
 	   set baBICbs (keep=replicate VARINMODEL);
 	   where replicate=&i;
@@ -76,11 +145,23 @@ proc sql noprint; select max(replicate) format 3. into :S from baBICbs; quit; /*
 	    %let TIME=%scan(&ALLTIME,&j);
 		%let LABEL=%scan(&ALLLABEL,&j);
 
-		proc phreg data = originaldata CONCORDANCE=HARRELL; 
+	    /*Get bootstrap model fitted in bootstrap data  */
+	    proc phreg data = &DATAboot;
 	      class &VARNAME;
 	      model &time*&outcome(0) = &VARNAME;
-		  ods output CONCORDANCE=concord ;
+		  store bootmodel; /*requests that the fitted model be saved to an item store  */
 	    run;
+        /*Get linear predictions (predicted) using fitted model above in original data  */
+	    proc plm restore=bootmodel;
+	     score data=&DATAorig out=BSOUT predicted; /* score (Linear predictor) new observations based on the item store bootmodel that was created above*/
+	    run;
+	    /*Using linear predictions "predicted" above compute the C-statistic-original*/
+        proc phreg data = BSOUT CONCORDANCE=HARRELL; 
+	     class &VARNAME;
+         model &time*&outcome(0) = &VARNAME / nofit;
+	     roc 'Original' pred=predicted;
+	     ods output CONCORDANCE=concord;
+        run;
 
 		data CTABLE_&label;
 	     set concord (keep= estimate rename=(estimate=cbs_ori_&label));
@@ -89,9 +170,12 @@ proc sql noprint; select max(replicate) format 3. into :S from baBICbs; quit; /*
 		 VARINMODEL="&VARNAME";
 	    run;
 
-		proc delete data=concord; run; quit;
+		proc delete data=concord BSOUT; run; quit;
 
      %end; /*j loop*/
+
+	 sasfile WORK.bsample3 close;
+     proc delete data=bsample3; run; quit;
 
 	 data ctable; 
        merge CTABLE_adl CTABLE_iadl(drop=VARINMODEL) CTABLE_walk(drop=VARINMODEL) CTABLE_death(drop=VARINMODEL);
@@ -113,8 +197,8 @@ proc sql noprint; select max(replicate) format 3. into :S from baBICbs; quit; /*
 %PUT ======MONITORING: %SYSFUNC(DATE(),YYMMDD10.), %LEFT(%SYSFUNC(TIME(),HHMM8.))======;
 
 /*
-======MONITORING: 2020-10-05, 14:52======
-======MONITORING: 2020-10-05, 15:05======
+======MONITORING: 2022-06-23, 9:43======
+======MONITORING: 2022-06-23, 10:01======
 */
 
 *Save permanent dataset;
@@ -130,7 +214,7 @@ To compute the average Optimism for the 3 outcomes:
 3-) For each BS: Compute Absolute difference: C-stat-BS-avg - C-stat-Original-avg
 4-) Compute Average (Absolute difference: C-stat-BS-avg - C-stat-original-avg) across 500 BS
 
-The corrected C-stat final models = C-stat of original sample (without Wolbers approximation) – degree of optimism (using Wolbers approximation). 
+The corrected C-stat final models = C-stat of original sample (without Wolbers approximation) â€“ degree of optimism (using Wolbers approximation). 
 ***/
 
 *baBIC model;
@@ -214,7 +298,7 @@ on the bootstrap-based optimism correction methods. arXiv preprint arXiv:2005.01
 /*Method description:
 Algorithm 1 (Location-shifted bootstrap confidence interval)
 1. For a multivariable prediction model, let theta_hat_app be the apparent predictive measure for the derivation population and
-   let theta_hat be the optimism-corrected predictive measure obtained from the Harrell’s bias correction, 0.632, or 0.632+ method.
+   let theta_hat be the optimism-corrected predictive measure obtained from the Harrellâ€™s bias correction, 0.632, or 0.632+ method.
 2. In the computational processes of theta_hat, we can obtain a bootstrap estimate of the sampling distribution of theta_hat_app from the B bootstrap samples.
    Compute the bootstrap confidence interval of theta_app from the bootstrap distribution, (theta_hat_app_L, theta_hat_app_U); 
    for the 95% confidence interval, they are typically calculated by the 2.5th and 97.5th percentiles of the bootstrap distribution.
