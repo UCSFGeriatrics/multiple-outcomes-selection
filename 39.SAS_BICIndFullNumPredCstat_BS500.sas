@@ -3,6 +3,8 @@
 *Purpose: Compute summary statistics for number of predictors and C-statistic for Individual, Union, Intersect, and Full methods in 500 bootstrap samples                          ;                                     
 *Statisticians: Grisell Diaz-Ramirez and Siqi Gan   																                                                               ;
 *Finished: 2021.03.01																				                                                                               ;
+*Modified: 2022.07.09																				                                                                               ;
+*Reason modified: Recompute C-stat-Original as described below                                                                                                                     ;
 ***********************************************************************************************************************************************************************************;
 
 /*Check system options specified at SAS invocation*/
@@ -334,6 +336,7 @@ RUN;
 ***************************************************** Calculate Optimism Corrected C-statistic for individual, union, and intersect models ******************************************************************;
 
 /*** Calculate C-statistic of individual, union, baBIC, intersection, and Full model in Case-study data: ***/
+
 options nomlogic nomprint nomrecall nosymbolgen;
 options nosource nonotes; /*nosource: suppress the listing of the SAS statements to the log, causes only source lines that contain errors to be written to the log*/
 options noquotelenmax; /*supress warning: THE QUOTED STRING CURRENTLY BEING PROCESSED HAS BECOME MORE THAN 262 CHARACTERS LONG*/
@@ -460,7 +463,31 @@ run;
 proc print data=outdata.cstat_original_95CI; run;
 
 
-/*** Fit each of the BS model (obtained using BS data) on the original case study data and calculate their C-statistic (C-stat-Original) ***/
+/*** Fit each of the BS model (obtained using BS data) on the original case study data and calculate their C-statistic (C-stat-Original)
+
+In previous version, we used the variables selected in each bootstrap model to fit the model with these variables in the original data
+This could be thought as bootstrap of the selection method.
+
+The general steps are:
+1) Obtain final model and corresponding C-statistic on the case study data, namely C-statistic-apparent
+2) Obtain final models of each bootstrap sample and compute the C-statistic of each bootstrap model, namely C-statistic-boot
+3) Compute the C-statistic of each bootstrap model evaluated in the original case-study data, namely C-statistic-original
+
+A more correct way is:
+"Freeze" the model obtained in 2 and obtain the C-statistic of each bootstrap model evaluated in the original data, this means:
+3a) use the coefficient estimates from bootstrap model to obtain predictions in original data:
+
+Model 1: PHREG and STORE=item-store statement: requests that the fitted model be saved to an item store
+Model 2: PLM restore=item-store created in 1)
+         SCORE data=&DATAorig out=BSOUT predicted: score (Linear predictor) new observations based on the item store that was created in Model1
+
+3b) use predictions in 3a) as covariate in model fitted in orginal data
+Model 3: PHREG with MODEL statement and NOFIT option and ROC statement using PRED=predicted 
+         This gives the same C-statistic as having the MODEL statement with covariate predicted
+
+These updates do not cause any significant changes in our results
+
+***/
 
 data originaldata; 
  set savedata.originaldata; 
@@ -479,6 +506,8 @@ options noquotelenmax; /*supress warning: THE QUOTED STRING CURRENTLY BEING PROC
 ods select none; /*to create output data sets through the ODS OUTPUT statement and suppress the display of all output*/
 
 *Define macro variables;
+%let DATAorig=originaldata;
+%let DATAboot=bsample3;
 %let NUMOUTCOMES=4; /*number of outcomes*/
 %let ALLOUTCOME=status_adldepdth status_iadldifdth status_walkdepdth death;
 %let ALLTIME=time_adldepdth time_iadldifdth time_walkdepdth time2death;
@@ -488,8 +517,16 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 
 %macro c_bs_ori(predictors=, common_pred=, model=);
  %do i=1 %to &S;
- /*For each bs dataset define VARNAME as the union/intersect*/
 
+  proc sql noprint; select (&i-1)*(nobs/&S)+1 into :fobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the first id of ith bs dataset*/
+  proc sql noprint; select &i*(nobs/&S) into :lobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the last id of ith bs dataset*/
+
+  data bsample3;
+   set bsample2 (FIRSTOBS=&fobs OBS=&lobs);
+  run;
+  sasfile WORK.bsample3 load;
+
+    /*For each bs dataset define VARNAME as the union/intersect*/
 	%if &common_pred=yes %then %do;
 	  data _null_;
 	   set union_intersect (keep=replicate &predictors);
@@ -502,12 +539,23 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 	    %let TIME=%scan(&ALLTIME,&j);
 		%let LABEL=%scan(&ALLLABEL,&j);
 
-		proc phreg data = originaldata CONCORDANCE=HARRELL; 
+	    /*Get bootstrap model fitted in bootstrap data  */
+	    proc phreg data = &DATAboot;
 	      class &VARNAME;
 	      model &time*&outcome(0) = &VARNAME;
-		  ods output CONCORDANCE=concord ;
+		  store bootmodel; /*requests that the fitted model be saved to an item store  */
 	    run;
-
+        /*Get linear predictions (predicted) using fitted model above in original data  */
+	    proc plm restore=bootmodel;
+	     score data=&DATAorig out=BSOUT predicted; /* score (Linear predictor) new observations based on the item store bootmodel that was created above*/
+	    run;
+	    /*Using linear predictions "predicted" above compute the C-statistic-original*/
+        proc phreg data = BSOUT CONCORDANCE=HARRELL; 
+	     class &VARNAME;
+         model &time*&outcome(0) = &VARNAME / nofit;
+	     roc 'Original' pred=predicted;
+	     ods output CONCORDANCE=concord;
+        run;
 		data CTABLE_&label;
 	     set concord (keep= estimate rename=(estimate=cbs_ori_&label));
 		 length VARINMODEL $1000;
@@ -515,8 +563,7 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 		 VARINMODEL="&VARNAME";
 	    run;
 
-		proc delete data=concord; run; quit;
-
+		proc delete data=concord BSOUT; run; quit;
      %end; /*j loop*/
 
 	 data ctable; 
@@ -543,21 +590,31 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 	      call symputx ('VARNAME' , &PREDICTOR);
 	     run;
 
-		proc phreg data = originaldata CONCORDANCE=HARRELL; 
+	    /*Get bootstrap model fitted in bootstrap data  */
+	    proc phreg data = &DATAboot;
 	      class &VARNAME;
 	      model &time*&outcome(0) = &VARNAME;
-		  ods output CONCORDANCE=concord ;
+		  store bootmodel; /*requests that the fitted model be saved to an item store  */
 	    run;
-
+        /*Get linear predictions (predicted) using fitted model above in original data  */
+	    proc plm restore=bootmodel;
+	     score data=&DATAorig out=BSOUT predicted; /* score (Linear predictor) new observations based on the item store bootmodel that was created above*/
+	    run;
+	    /*Using linear predictions "predicted" above compute the C-statistic-original*/
+        proc phreg data = BSOUT CONCORDANCE=HARRELL; 
+	     class &VARNAME;
+         model &time*&outcome(0) = &VARNAME / nofit;
+	     roc 'Original' pred=predicted;
+	     ods output CONCORDANCE=concord;
+        run;
 		data CTABLE_&label;
 	     set concord (keep= estimate rename=(estimate=cbs_ori_&label));
-		 length VARINMODEL_&label $1000;
+		 length VARINMODEL $1000;
 	     replicate=&i;
-		 VARINMODEL_&label="&VARNAME";
+		 VARINMODEL="&VARNAME";
 	    run;
 
-		proc delete data=concord; run; quit;
-
+		proc delete data=concord BSOUT; run; quit;
      %end; /*j loop*/
 
 	 data ctable; 
@@ -569,6 +626,9 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 	proc delete data=CTABLE_adl CTABLE_iadl CTABLE_walk CTABLE_death; run; quit;
 
    %end; /*&common pred DO*/
+
+  sasfile WORK.bsample3 close;
+  proc delete data=bsample3; run; quit;
 
   proc append base=ctable_ori_sim_&model data=ctable force; run;
   proc delete data=ctable; run; quit;
@@ -587,10 +647,10 @@ proc sql noprint; select max(replicate) format 3. into :S from union_intersect; 
 %c_bs_ori (predictors=VARINMODEL_adl VARINMODEL_iadl VARINMODEL_walk VARINMODEL_death, common_pred=no, model=ind);
 %PUT ======MONITORING: %SYSFUNC(DATE(),YYMMDD10.), %LEFT(%SYSFUNC(TIME(),HHMM8.))======;
 /*
-======MONITORING: 2020-09-20, 5:43======
-======MONITORING: 2020-09-20, 5:58======
-======MONITORING: 2020-09-20, 6:09======
-======MONITORING: 2020-09-20, 6:22======
+======MONITORING: 2022-06-22, 15:27======
+======MONITORING: 2022-06-22, 15:54======
+======MONITORING: 2022-06-22, 16:23======
+======MONITORING: 2022-06-22, 16:56======
 */
 
 *Save permanent datasets;
@@ -609,7 +669,7 @@ To compute the average Optimism for the 3 outcomes:
 3-) For each BS: Compute Absolute difference: C-stat-BS-avg - C-stat-Original-avg
 4-) Compute Average (Absolute difference: C-stat-BS-avg - C-stat-original-avg) across 500 BS
 
-The corrected C-stat final models = C-stat of original sample (without Wolbers approximation) – degree of optimism (using Wolbers approximation). 
+The corrected C-stat final models = C-stat of original sample (without Wolbers approximation) â€“ degree of optimism (using Wolbers approximation). 
 ***/
 %let S=500;
 
@@ -674,44 +734,105 @@ proc print data=outdata.ctable_ori_sim_intersect (obs=3); var VARINMODEL replica
 proc print data=cop_intersect (obs=3); var replicate optimism_intersect_adl optimism_intersect_iadl optimism_intersect_walk optimism_intersect_death optimism_intersect_avg; run;
 proc means data=cop_intersect; run;
 
+***************************************************** Calculate C-stat-original for full model: ******************************************************************;
+*Fit full model on the BS data, obtain predictions on the original case study data, and calculate C-statistic ********************************;
+
+%macro c_bs_ori_full(model=);
+
+%let VARNAME=dAGE SEX ALCOHOL ARTHRITIS CANCER COGDLRC3G COGIMRC3G DIABETES DRIVE EDU EXERCISE EYE2G
+		     FALL HEARAID HEARING HEARTFAILURE HYPERTENSION INCONTINENCE LALONE LUNG MSTAT OTHERARM
+	         OTHERCHAIR OTHERCLIM3G OTHERDIME OTHERLIFT OTHERPUSH OTHERSIT OTHERSTOOP OTHERWALK PAIN CESDALL
+	         qBMI qFAGE qMAGE SHLT SMOKING STROKE VOLUNTEER; /*all 39 initial variables*/
+
+ %do i=1 %to &S;
+
+  proc sql noprint; select (&i-1)*(nobs/&S)+1 into :fobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the first id of ith bs dataset*/
+  proc sql noprint; select &i*(nobs/&S) into :lobs from dictionary.tables where libname='WORK' and memname='BSAMPLE2'; quit; /*create macro variable with the last id of ith bs dataset*/
+
+  data bsample3;
+   set bsample2 (FIRSTOBS=&fobs OBS=&lobs);
+  run;
+  sasfile WORK.bsample3 load;
+
+  %do j=1 %to &NUMOUTCOMES;
+    %let OUTCOME=%scan(&ALLOUTCOME,&j); /*extract the jth outcome, jth time, jth label*/
+    %let TIME=%scan(&ALLTIME,&j);
+	%let LABEL=%scan(&ALLLABEL,&j);
+
+    /*Get bootstrap model fitted in bootstrap data  */
+    proc phreg data = &DATAboot;
+      class &VARNAME;
+      model &time*&outcome(0) = &VARNAME;
+	  store bootmodel; /*requests that the fitted model be saved to an item store  */
+    run;
+    /*Get linear predictions (predicted) using fitted model above in original data  */
+    proc plm restore=bootmodel;
+     score data=&DATAorig out=BSOUT predicted; /* score (Linear predictor) new observations based on the item store bootmodel that was created above*/
+    run;
+    /*Using linear predictions "predicted" above compute the C-statistic-original*/
+    proc phreg data = BSOUT CONCORDANCE=HARRELL; 
+     class &VARNAME;
+     model &time*&outcome(0) = &VARNAME / nofit;
+     roc 'Original' pred=predicted;
+     ods output CONCORDANCE=concord;
+    run;
+	data CTABLE_&label;
+     set concord (keep= estimate rename=(estimate=cbs_ori_&label));
+	 length VARINMODEL $1000;
+     replicate=&i;
+	 VARINMODEL="&VARNAME";
+    run;
+
+	proc delete data=concord BSOUT; run; quit;
+   %end; /*j loop*/
+
+  sasfile WORK.bsample3 close;
+  proc delete data=bsample3; run; quit;
+
+  data ctable; 
+    merge CTABLE_adl CTABLE_iadl(drop=VARINMODEL) CTABLE_walk(drop=VARINMODEL) CTABLE_death(drop=VARINMODEL);
+	by replicate;
+    cbs_ori_avg=mean(cbs_ori_adl, cbs_ori_iadl, cbs_ori_walk, cbs_ori_death);
+  run;
+
+  proc delete data=CTABLE_adl CTABLE_iadl CTABLE_walk CTABLE_death; run; quit;
+
+  proc append base=ctable_ori_sim_&model data=ctable force; run;
+  proc delete data=ctable; run; quit;
+
+  %end; /*i loop*/
+%mend c_bs_ori_full;
+
+*Full model;
+%PUT ======MONITORING: %SYSFUNC(DATE(),YYMMDD10.), %LEFT(%SYSFUNC(TIME(),HHMM8.))======;
+%c_bs_ori_full (model=full);
+%PUT ======MONITORING: %SYSFUNC(DATE(),YYMMDD10.), %LEFT(%SYSFUNC(TIME(),HHMM8.))======;
+
+*Save permanent dataset;
+data outdata.ctable_ori_sim_full; set ctable_ori_sim_full; run;
+
 *Full model;
 proc contents data=outdata.BICbs&S.FullC; run;
-proc print data=outdata.cstat_original; run;
-
-*Get C-stats of Full model in original data;
-data _null_; set outdata.cstat_original; where model="adl_full"; call symputx ('c_ori_adl' , Estimate); run;
-%put &c_ori_adl;
-data _null_; set outdata.cstat_original; where model="iadl_full"; call symputx ('c_ori_iadl' , Estimate); run;
-%put &c_ori_iadl;
-data _null_; set outdata.cstat_original; where model="walk_full"; call symputx ('c_ori_walk' , Estimate); run;
-%put &c_ori_walk;
-data _null_; set outdata.cstat_original; where model="death_full"; call symputx ('c_ori_death' , Estimate); run;
-%put &c_ori_death;
-
-*Get C-stat_full-avg;
-proc means data=outdata.cstat_original stackodsoutput mean maxdec=4; 
- var Estimate;
- where model in ("adl_full", "iadl_full", "walk_full", "death_full");
- ods output summary=c_stat_full_avg (keep=Mean rename=(Mean=Estimate));
-run;
-data _null_; set c_stat_full_avg; call symputx ('c_ori_avg' , Estimate); run;
-%put &c_ori_avg;
+proc contents data=outdata.ctable_ori_sim_full; run;
 
 data cop_full (keep=replicate optimism_full_adl optimism_full_iadl optimism_full_walk optimism_full_death optimism_full_avg);
- set outdata.BICbs&S.FullC (keep=replicate C_adl C_iadl C_walk C_death C_avg) ;
- optimism_full_adl=abs(C_adl-&c_ori_adl);
- optimism_full_iadl=abs(C_iadl-&c_ori_iadl);
- optimism_full_walk=abs(C_walk-&c_ori_walk);
- optimism_full_death=abs(C_death-&c_ori_death);
- optimism_full_avg=abs(C_avg-&c_ori_avg);
+ merge outdata.BICbs&S.FullC (keep=replicate C_adl C_iadl C_walk C_death C_avg) 
+       outdata.ctable_ori_sim_full (keep=replicate cbs_ori_adl cbs_ori_iadl cbs_ori_walk cbs_ori_death cbs_ori_avg);
+ by replicate;
+ optimism_full_adl=abs(C_adl-cbs_ori_adl);
+ optimism_full_iadl=abs(C_iadl-cbs_ori_iadl);
+ optimism_full_walk=abs(C_walk-cbs_ori_walk);
+ optimism_full_death=abs(C_death-cbs_ori_death);
+ optimism_full_avg=abs(C_avg-cbs_ori_avg);
 run;
 
 *QC;
 proc print data=outdata.BICbs&S.FullC (obs=3); var VARINMODEL replicate C_adl C_iadl C_walk C_death C_avg; run;
+proc print data=outdata.ctable_ori_sim_full (obs=3); var VARINMODEL replicate cbs_ori_adl cbs_ori_iadl cbs_ori_walk cbs_ori_death cbs_ori_avg; run;
 proc print data=cop_full (obs=3); var replicate optimism_full_adl optimism_full_iadl optimism_full_walk optimism_full_death optimism_full_avg; run;
 proc means data=cop_full; run;
 
-*Merge 3 cop: ind, union, intersect;
+*Merge 4 cop: ind, union, intersect, full;
 data outdata.c_opt_ind_union_int_full;
  merge cop_ind cop_union cop_intersect cop_full;
  by replicate;
@@ -762,16 +883,23 @@ proc means data=cstat_original stackodsoutput mean maxdec=4;
  ods output summary=c_stat_union_avg (keep=Mean rename=(Mean=Estimate));
 run;
 
+*Calculate C_stat_intersect_avg in Original data;
 proc means data=cstat_original stackodsoutput mean maxdec=4; 
  var Estimate;
  where model in ("adl_intersect", "iadl_intersect", "walk_intersect", "death_intersect");
  ods output summary=c_stat_intersect_avg (keep=Mean rename=(Mean=Estimate));
 run;
 
+*Calculate C_stat_full_avg in Original data;
+proc means data=cstat_original stackodsoutput mean maxdec=4; 
+ var Estimate;
+ where model in ("adl_full", "iadl_full", "walk_full", "death_full");
+ ods output summary=c_stat_full_avg (keep=Mean rename=(Mean=Estimate));
+run;
+
 data c_stat_union_avg; set c_stat_union_avg; length Variable $32; Variable="optimism_union_avg"; run;
 data c_stat_intersect_avg; set c_stat_intersect_avg; length Variable $32; Variable="optimism_intersect_avg"; run;
 data c_stat_full_avg; set c_stat_full_avg; length Variable $32; Variable="optimism_full_avg"; run;
-
 
 data cstat_original; set cstat_original c_stat_union_avg c_stat_intersect_avg c_stat_full_avg; proc sort; by variable; run;
 
@@ -800,7 +928,7 @@ on the bootstrap-based optimism correction methods. arXiv preprint arXiv:2005.01
 /*Method description:
 Algorithm 1 (Location-shifted bootstrap confidence interval)
 1. For a multivariable prediction model, let theta_hat_app be the apparent predictive measure for the derivation population and
-   let theta_hat be the optimism-corrected predictive measure obtained from the Harrell’s bias correction, 0.632, or 0.632+ method.
+   let theta_hat be the optimism-corrected predictive measure obtained from the Harrellâ€™s bias correction, 0.632, or 0.632+ method.
 2. In the computational processes of theta_hat, we can obtain a bootstrap estimate of the sampling distribution of theta_hat_app from the B bootstrap samples.
    Compute the bootstrap confidence interval of theta_app from the bootstrap distribution, (theta_hat_app_L, theta_hat_app_U); 
    for the 95% confidence interval, they are typically calculated by the 2.5th and 97.5th percentiles of the bootstrap distribution.
